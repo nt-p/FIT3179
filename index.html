@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization Dashboard</title>
+    
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Vega and Vega-Lite libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+
+    <!-- Title Section -->
+    <header class="title">
+        <h1>Data Visualization Dashboard</h1>
+    </header>
+
+    <!-- Description Section -->
+    <section class="description">
+        <p>This dashboard provides a set of data visualizations including geographic, statistical, and analytical insights.</p>
+    </section>
+
+    <!-- Main Content Section -->
+    <section class="content">
+        <!-- First Column: Vega-Lite Choropleth Map -->
+        <div class="column">
+            <h2>Choropleth Map</h2>
+            <div id="map"></div>
+        </div>
+
+        <!-- Second Column (Placeholder) -->
+        <div class="column">
+            <h2>Chart 2</h2>
+            <p>Content for the second chart goes here.</p>
+        </div>
+
+        <!-- Third Column (Placeholder) -->
+        <div class="column">
+            <h2>Chart 3</h2>
+            <p>Content for the third chart goes here.</p>
+        </div>
+    </section>
+
+    <script>
+        // Vega-Lite specification for a choropleth map
+        const mapSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": 250,
+            "height": 300,
+            "data": {
+                "url": "https://github.com/nt-p/FIT3179/blob/main/Data/WaterSEPP.geojson",  // Replace with your GeoJSON file path
+                "format": {
+                    "type": "geojson"
+                }
+            },
+            "projection": {"type": "mercator"},
+            "mark": {
+                "type": "geoshape",
+                "stroke": "white",
+                "strokeWidth": 0.5
+            },
+            "encoding": {
+                "color": {
+                    "field": "properties.Segment_Type",  // Replace with a property in your GeoJSON file
+                    "type": "nominal",
+                    "scale": {"scheme": "category20b"}
+                },
+                "tooltip": [
+                    {"field": "properties.Policy_Name", "type": "nominal", "title": "Policy Name"},
+                    {"field": "properties.Segment_Type", "type": "nominal", "title": "Segment Type"},
+                    {"field": "properties.Surface_Water_Segment", "type": "nominal", "title": "Surface Water Segment"},
+                    {"field": "properties.Subsegment", "type": "nominal", "title": "Subsegment"},
+                    {"field": "properties.Date_Approved", "type": "temporal", "title": "Date Approved"},
+                    {"field": "properties.Comment", "type": "nominal", "title": "Comment"}                ]
+            }
+        };
+
+        // Embed the choropleth map into the "map" div
+        vegaEmbed('#map', mapSpec).catch(console.error);
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Title Styling */
+.title {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid #444;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.title h1 {
+    font-size: 2rem;
+    color: #444;
+}
+
+/* Description Section Styling */
+.description {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #888;
+    background-color: #fafafa;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Main Content Styling */
+.content {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+/* Column Styling */
+.column {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.column h2 {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+#map {
+    width: 100%;
+    height: 300px;
+}
