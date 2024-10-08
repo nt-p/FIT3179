@@ -1,0 +1,32 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Annual Traffic Volume by Flow Direction",
+    "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
+    "data": {
+      "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
+      "format": {"type": "csv"}
+    },
+    "mark": "point",
+    "encoding": {
+      "x": {
+        "field": "FLOW",
+        "type": "nominal",
+        "title": "Flow Direction",
+        "sort": "-y"  
+      },
+      "y": {
+        "field": "ALLVEHS_AADT",
+        "type": "quantitative",
+        "title": "Average Annual Daily Traffic (ALLVEHS_AADT)"
+      },
+      "color": {
+        "field": "LGA_SHORT_NM",
+        "type": "nominal",
+        "legend": null  
+      },
+      "tooltip": [
+        {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
+        {"field": "ALLVEHS_AADT", "type": "quantitative", "title": "AADT"}
+      ]
+    }
+  }
