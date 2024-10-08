@@ -3,64 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rest Area Choropleth Map</title>
-    
-    <!-- Link to the external CSS file -->
-    <link rel="stylesheet" href="styles.css">
+    <title>Victoria Map with Suburb Names</title>
     
     <!-- Vega and Vega-Lite libraries -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #map {
+            width: 800px;
+            height: 600px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Title Section -->
-    <header class="title">
-        <h1>Rest Area Choropleth Map</h1>
-    </header>
+    <h1>Victoria Map with Suburb Names</h1>
+    <div id="map"></div>
 
-    <!-- Description Section -->
-    <section class="description">
-        <p>This map visualizes rest areas in various localities, categorizing them by rest area type and displaying related data in tooltips.</p>
-    </section>
-
-    <!-- Main Map Section -->
-    <section class="content">
-        <div id="map"></div>
-    </section>
-
-    <!-- Vega-Lite Choropleth Map Specification -->
     <script>
         const mapSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "width": 800,
-            "height": 500,
-            "data": {
-                "url": "path/to/your/Rest_Area.json",  // Replace with your actual file path
-                "format": {"type": "topojson", "feature": "Rest_Area"}
-            },
-            "projection": {"type": "mercator"},
-            "mark": {
-                "type": "geoshape",
-                "stroke": "white",
-                "strokeWidth": 0.5
-            },
-            "encoding": {
-                "color": {
-                    "field": "properties.RESTAREATYPE",
-                    "type": "nominal",
-                    "scale": {"scheme": "category20"}  // Use categorical colors for different types
+            "height": 600,
+            "layer": [
+                // Base layer for the suburb shapes
+                {
+                    "data": {
+                        "url": "path/to/your/victoria.topojson",  // Replace with the path to your TopoJSON file
+                        "format": {"type": "topojson", "feature": "victoria"}  // Update "feature" if necessary
+                    },
+                    "projection": {"type": "mercator"},
+                    "mark": {
+                        "type": "geoshape",
+                        "stroke": "black",
+                        "strokeWidth": 0.5,
+                        "fill": "#e0e0e0"
+                    }
                 },
-                "tooltip": [
-                    {"field": "properties.RESTAREANAME", "type": "nominal", "title": "Rest Area Name"},
-                    {"field": "properties.RESTAREATYPE", "type": "nominal", "title": "Rest Area Type"},
-                    {"field": "properties.LOCALITY", "type": "nominal", "title": "Locality"}
-                ]
-            }
+                // Separate text layer for suburb names
+                {
+                    "data": {
+                        "url": "Data/vic_suburb_borders.json",  // Same file path as above
+                        "format": {"type": "topojson", "feature": "victoria"}
+                    },
+                    "projection": {"type": "mercator"},
+                    "mark": {
+                        "type": "text",
+                        "fontSize": 8,
+                        "fill": "blue",
+                        "dy": -5  // Adjusts label position slightly above center
+                    },
+                    "encoding": {
+                        "longitude": {"field": "geometry.coordinates[0]", "type": "quantitative"},
+                        "latitude": {"field": "geometry.coordinates[1]", "type": "quantitative"},
+                        "text": {"field": "properties.vic_loca_2", "type": "nominal"}
+                    }
+                }
+            ]
         };
 
-        // Embed the choropleth map into the "map" div
+        // Embed the map of Victoria with suburb names into the "map" div
         vegaEmbed('#map', mapSpec).catch(console.error);
     </script>
 </body>
