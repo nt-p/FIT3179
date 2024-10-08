@@ -1,0 +1,44 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Rest Area Locations in Victoria",
+    "width": 800,
+    "height": 600,
+    "layer": [
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders.json",
+          "format": {"type": "topojson", "feature": "vic_suburb_borders"}
+        },
+        "projection": {"type": "mercator"},
+        "mark": {
+          "type": "geoshape",
+          "stroke": "black",
+          "strokeWidth": 0.5,
+          "fill": "white"
+        }
+      },
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Rest_Area.json",
+          "format": {"type": "topojson", "feature": "Rest_Area"}
+        },
+        "projection": {"type": "mercator"},
+        "mark": {
+          "type": "circle",
+          "color": "blue",
+          "size": 50
+        },
+        "encoding": {
+          "longitude": {"field": "geometry.coordinates[0]", "type": "quantitative"},
+          "latitude": {"field": "geometry.coordinates[1]", "type": "quantitative"},
+          "tooltip": [
+            {"field": "properties.RESTAREANAME", "type": "nominal", "title": "Rest Area Name"},
+            {"field": "properties.RESTAREATYPE", "type": "nominal", "title": "Rest Area Type"},
+            {"field": "properties.ROADSPEEDLIMIT", "type": "nominal", "title": "Road Speed Limit"},
+            {"field": "properties.COMMERCIALACTIVITY", "type": "nominal", "title": "Commercial Activity"}
+          ]
+        }
+      }
+    ]
+  }
+  

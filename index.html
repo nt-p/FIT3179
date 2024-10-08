@@ -40,8 +40,8 @@
                 // Base layer for the suburb shapes
                 {
                     "data": {
-                        "url": "path/to/your/victoria.topojson",  // Replace with the path to your TopoJSON file
-                        "format": {"type": "topojson", "feature": "victoria"}  // Update "feature" if necessary
+                        "url": "https://github.com/nt-p/FIT3179/blob/main/Data/vic_suburb_borders.json",  // Replace with the path to your TopoJSON file
+                        "format": {"type": "topojson", "feature": "vic_suburb_borders"}  // Update "feature" if necessary
                     },
                     "projection": {"type": "mercator"},
                     "mark": {
@@ -51,25 +51,6 @@
                         "fill": "#e0e0e0"
                     }
                 },
-                // Separate text layer for suburb names
-                {
-                    "data": {
-                        "url": "Data/vic_suburb_borders.json",  // Same file path as above
-                        "format": {"type": "topojson", "feature": "victoria"}
-                    },
-                    "projection": {"type": "mercator"},
-                    "mark": {
-                        "type": "text",
-                        "fontSize": 8,
-                        "fill": "blue",
-                        "dy": -5  // Adjusts label position slightly above center
-                    },
-                    "encoding": {
-                        "longitude": {"field": "geometry.coordinates[0]", "type": "quantitative"},
-                        "latitude": {"field": "geometry.coordinates[1]", "type": "quantitative"},
-                        "text": {"field": "properties.vic_loca_2", "type": "nominal"}
-                    }
-                }
             ]
         };
 
