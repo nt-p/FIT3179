@@ -3,10 +3,16 @@
     "title": "Rest Area Locations in Victoria",
     "width": 800,
     "height": 600,
+    "params": [{
+          "name" : "grid",
+          "select": "interval",
+          "bind": "scales"
+        }],
     "layer": [
       {
         "data": {
           "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders.json",
+          
           "format": {"type": "topojson", "feature": "vic_suburb_borders"}
         },
         "projection": {"type": "mercator"},

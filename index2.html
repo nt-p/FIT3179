@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Victorian Traffic Behaviour and Accessibility</title>
+    <title>Data Visualizations</title>
 
     <!-- Vega and Vega-Lite libraries -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
@@ -12,72 +12,112 @@
 
     <style>
         body {
+            background-color: white;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
         }
-        .title {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        .description {
+        .full-width-row {
             width: 100%;
             max-width: 1200px;
-            text-align: center;
-            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .map-container {
+            height: 800px; /* Make the map taller */
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+        .description-full {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            font-size: 1.1rem;
             margin-bottom: 20px;
             border: 1px solid #ddd;
-            padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .container {
+        .row {
             display: flex;
-            flex-direction: column;  /* Stack items vertically */
-            gap: 20px;
             width: 100%;
             max-width: 1200px;
+            margin-bottom: 20px;
+            align-items: center;
         }
         .visualization {
-            width: 100%;  /* Each visualization takes the full width */
-            min-height: 300px;
+            flex: 2; /* Allocates more space to the visualization */
+            min-width: 75%;
+            height: 500px;
             border: 1px solid #ddd;
-            padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+        .description {
+            flex: 1; /* Allocates less space to the text */
+            min-width: 25%;
+            padding: 20px;
+            font-size: 1.1rem;
+        }
+        /* Alternate rows */
+        .row:nth-child(odd) .visualization {
+            order: 1;
+        }
+        .row:nth-child(odd) .description {
+            order: 2;
+        }
+        .row:nth-child(even) .visualization {
+            order: 2;
+        }
+        .row:nth-child(even) .description {
+            order: 1;
         }
     </style>
 </head>
 <body>
 
-    <!-- Title Section -->
-    <div class="title">Victorian Traffic Behaviour and Accessibility</div>
+    <h1>Data Visualizations</h1>
 
-    <!-- Description Section -->
-    <div class="description">
-        <p>This is a dashboard that describes and visualises important Victorian traffic and road travel information
-            This includes a choropleth map of all rest stops in Victoria, including what services are offered. There are also plots
-            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow.
-            </p>
+    <!-- First Row (Full Width Map) -->
+    <div class="full-width-row">
+        <div id="map" class="map-container"></div>
     </div>
 
-    <!-- Container for Visualizations -->
-    <div class="container">
-        <!-- First Visualization -->
+    <!-- Description for the Map -->
+    <div class="description-full">
+        <p>This is a dashboard that describes and visualises important Victorian traffic and road travel information
+            This includes a choropleth map of all rest stops in Victoria, including what services are offered. There are also plots
+            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow.</p>
+    </div>
+
+    <!-- Second Row -->
+    <div class="row">
         <div id="vis1" class="visualization"></div>
-        
-        <!-- Second Visualization -->
+        <div class="description">
+            <p>Description of the first plot goes here. This visualization shows key insights or metrics for analysis.</p>
+        </div>
+    </div>
+
+    <!-- Third Row -->
+    <div class="row">
+        <div class="description">
+            <p>Description of the second plot goes here. Additional data visualization to provide context and insights.</p>
+        </div>
         <div id="vis2" class="visualization"></div>
-        
-        <!-- Third Visualization -->
+    </div>
+
+    <!-- Fourth Row -->
+    <div class="row">
         <div id="vis3" class="visualization"></div>
+        <div class="description">
+            <p>Description of the third plot goes here. This visualization helps to understand patterns and trends.</p>
+        </div>
     </div>
 
     <script type="text/javascript">
-        // Inline specification for the first visualization
-        
-        const spec1 = {
+        // First Visualization (Map)
+        const mapSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "title": "Rest Area Locations in Victoria",
             "width": 1200,
@@ -87,6 +127,7 @@
                 "type": "interval"
                 }
             },
+            
             "projection": {"type": "mercator"},
             "layer": [
             {
@@ -99,12 +140,12 @@
                     "select": "interval",
                     "bind": "scales"
                 }],
-                
+                "background": "grey",
                 "mark": {
-                "type": "geoshape",
-                "stroke": "black",
-                "strokeWidth": 0.5,
-                "fill": "white"
+                    "type": "geoshape",
+                    "stroke": "black",
+                    "strokeWidth": 0.5,
+                    "fill": "#70b6db"
                 }
             },
             {
@@ -132,21 +173,21 @@
             }
             ]
         };
+        vegaEmbed('#map', mapSpec).catch(console.error);
 
-    </script>
-  
-    <script type="text/javascript">
-
-        // Inline specification for the second visualization
+        // Second Visualization
         const spec2 = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "title": "Annual Traffic Volume per Local Government Area",
             "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
-            "width": 1000,
+            "width": 800,
             "data": {
             "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
             "format": {"type": "csv"}
             },
+            "transform": [{
+                "filter": "datum.ALLVEHS_AADT > 5000"
+            }],
             "mark": "bar",
             "encoding": {
             "x": {
@@ -172,27 +213,37 @@
             ]
             }
         }
-    </script>
-    <script type="text/javascript">
-        // Inline specification for the third visualization
+        vegaEmbed('#vis1', spec2).catch(console.error);
+
+        // Third Visualization
         const spec3 = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "title": "Annual Traffic Volume by Flow Direction",
             "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
-            "width": 1200,
+            "height": 400,
+            "width": 700,
             "data": {
             "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
             "format": {"type": "csv"}
             },
-            "mark": "point",
+            "params": [{
+                "name": "grid",
+                "select": "interval",
+                "bind": "scales"
+            }],
+            "transform": [{
+                "filter": "datum.ALLVEHS_AADT > 10000"
+            }],
+            "mark": "bar",
             "encoding": {
-            "x": {
+            "y": {
                 "field": "FLOW",
                 "type": "nominal",
                 "title": "Flow Direction",
                 "sort": "-y"  
             },
-            "y": {
+            "x": {
+                "aggregate": "average",
                 "field": "ALLVEHS_AADT",
                 "type": "quantitative",
                 "title": "Average Annual Daily Traffic (ALLVEHS_AADT)"
@@ -204,15 +255,15 @@
             },
             "tooltip": [
                 {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
-                {"field": "ALLVEHS_AADT", "type": "quantitative", "title": "AADT"}
+                {"aggregate": "average","field": "ALLVEHS_AADT", "type": "quantitative", "title": "AADT"}
             ]
             }
         }
+        vegaEmbed('#vis2', spec3).catch(console.error);
 
-        // Embed the visualizations using inline specs
-        vegaEmbed('#vis1', spec1).catch(console.error);
-        vegaEmbed('#vis2', spec2).catch(console.error);
-        vegaEmbed('#vis3', spec3).catch(console.error);
+        // Fourth Visualization
+        const spec4 = { /* Vega-Lite specification for the third plot */ };
+        vegaEmbed('#vis3', spec4).catch(console.error);
     </script>
 
 </body>
