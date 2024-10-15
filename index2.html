@@ -25,7 +25,7 @@
             padding: 20px;
         }
         .description-full {
-            width: 100%;
+            width: 50%;
             max-width: 1200px;
             padding: 20px;
             font-size: 1.1rem;
@@ -50,7 +50,19 @@
             overflow: hidden;
         }
         .map-description-full {
-            width: 100%;
+            width: 50%;
+            max-width: 1200px;
+            padding: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background-color: #e0ded7;
+        }
+        .viz-description-full {
+            width: 50%;
             max-width: 1200px;
             padding: 20px;
             font-size: 1.1rem;
@@ -71,6 +83,17 @@
         .visualization {
             flex: 2; 
             min-width: 78%;
+            height: 500px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: white;
+        }
+        .long-visualization {
+            flex: 2; 
+            min-width: 100%;
             height: 500px;
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -179,12 +202,26 @@
         </div>
     </div>
 
+    <!-- Fifth Row -->
+    <div class="row">
+        <div id="vis4" class="long-visualization"></div>
+     
+    </div>
+    <div class="viz-description-full">
+        <p> This heatmap displays the frequency of trips made to different local government areas for a variety of purposes. It clearly demonstrates that Melbourne is the most visited suburb by far for work purposes, which aligns with our common sense.
+            It is also intuitive that Melbourne is the most visited for social purposes. There are not any other outstanding findings, indicating that Victorians travel relatively evenly across the more populous areas for most of their needs.
+        </p>
+    </div>
+
     <div class = "metadata">
         <h2>Metadata</h2>
         <p>
             Name: Neil Tamhankar <br>
             Unit: FIT3179 <br>
-            Date: 15/10/2024
+            Date: 15/10/2024 <br>
+            Data Sources: <a href="https://discover.data.vic.gov.au/dataset/traffic-volume">Traffic Volume</a>, 
+            <a href="https://data.gov.au/dataset/ds-dga-af33dd8c-0534-4e18-9245-fc64440f742e/details">Victorian Map</a>,
+            <a href="https://discover.data.vic.gov.au/dataset/victorian-integrated-survey-of-travel-and-activity">Victorian Travel Habits</a>
         </p>
     </div>
     
@@ -275,7 +312,7 @@
             "layer": [
             {
                 "data": {
-                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders_working.json",
+                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders_trial.json",
                 "format": {"type": "topojson", "feature": "vic_suburb_borders"}
                 },
                 "params": [{
@@ -562,6 +599,132 @@
             }
         };
         vegaEmbed('#vis3', spec4).catch(console.error);
+
+        const spec5 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Travel Frequencies to Local Government Areas Depending on Trip Purpose",
+            "data": {
+                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Victorian_travel_data_main.csv",
+                "format": {"type": "csv"}
+            },
+            "width": "container",
+            "height": "container",
+            // "transform": [
+            //     {
+            //         "filter": "datum.trippurp != 'Unknown Purpose'"
+            //     },
+            //     {
+            //         "calculate": "datum.trippurp == 'Change Mode' ? 'Change Mode of Transport' : datum.trippurp",
+            //         "as": "trippurp"  
+            //     }
+            // ],
+            "config": {
+                "title": {
+                    "font": "Afacad Flux",
+                    "fontSize": 18
+                },
+                "axis": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    },
+                    "legend": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    }
+                
+            },
+            // "selection": {
+            //     "tripPurpose": {
+            //         "type" : "single",
+            //         "fields": ["trippurp"],
+            //         "bind": "legend",
+            //         "empty": "all"
+            //     }
+            // },
+            "selection": {
+                "purp_highlight":{
+                    "type": "single",
+                    "fields": ["trippurp"],
+     
+                },
+                "LGA_highlight":{
+                    "type": "single",
+                    "fields": ["destLGA"],
+     
+                }
+            },
+           
+            // "selection": {
+            //     "destinationLGA": {
+            //         "type" : "single",
+            //         "fields": ["destLGA"],
+            //         "bind": "legend",
+            //         "empty": "all"
+            //     }
+            // },
+            // "width": "container",
+            // "height": "container",
+            // "selection": {
+            //     "LGA_highlight":{
+            //         "type": "single",
+            //         "fields": ["destLGA"],
+            //         "bind": "legend"
+            //     }
+            // },
+            "mark": "rect",
+            "encoding": {
+                "x": {
+                "field": "destLGA",
+                "type": "nominal",
+               
+                "title": "Destination LGA",
+                "axis": {"labelAngle": -45}
+                },
+                "y": {
+                    // "aggregate": "average",
+                "field": "trippurp",
+                "type": "nominal",
+                "title": "Trip Purpose"
+                },
+                "color": {
+                    "aggregate": "count",
+                    "type": "quantitative",
+                    "title": "Frequency",
+                    "scale": {"scheme": "greens"}  
+                },
+                "opacity": {
+                    "condition": [
+                        {"selection": "purp_highlight", "value": 1},
+                        {"selection": "LGA_highlight", "value": 1}
+
+                    ],
+                    "value": 0.2
+            },
+                "tooltip": [
+                    {"field": "destLGA", "type": "nominal", "title": "Destination Area"},
+                    {"field": "trippurp", "type": "nominal", "title": "Trip Purpose"},
+                    {"aggregate": "count", "type": "quantitative", "title": "Frequency"}
+                    ]
+                // "color": {
+                //     "field": "trippurp",
+                //     "type": "nominal",
+                //     "title": "Trip Purpose",
+                //     // "scale": {"scheme": "category20c"},
+                //     // "legend": {"title": "Trip Purpose"}
+                // },
+                
+                // "tooltip": [
+                // {"field": "destLGA", "type": "nominal", "title": "Destination LGA"},
+                // {"aggregate": "average","field": "triptime", "type": "quantitative", "title": "Trip Time"},
+                // {"field": "trippurp", "type": "nominal", "title": "Trip Purpose"}
+                // ]
+            }
+        };
+        vegaEmbed('#vis4', spec5).catch(console.error);
     </script>
 
 </body>
