@@ -92,6 +92,18 @@
             background-color: #ddd;   
             margin: 20px 0;           
             }
+
+        .metadata {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #217342;
+        }
         
         .row:nth-child(odd) .visualization {
             order: 1;
@@ -159,10 +171,23 @@
     <div class="row">
         <div id="vis3" class="visualization"></div>
         <div class="description">
-            <p>Description of the third plot goes here. This visualization helps to understand patterns and trends.</p>
+            <p>These are line plots that measure average trip time from 2012-2019, and relate to a respective trip purpose.
+                It is seen that changing mode of transport undisputedly takes the most amount of time on average (low of 56.7 min in 2015, high of 64 min in 2017).
+                On average, leaving the house to buy something takes the least amount of time, consistently remaining at around 15 minutes across the measured period. 
+                This is likely attributed to the majority of trips intended for short stops at the local supermarket or pharmacy.
+            </p>
         </div>
     </div>
 
+    <div class = "metadata">
+        <h2>Metadata</h2>
+        <p>
+            Name: Neil Tamhankar <br>
+            Unit: FIT3179 <br>
+            Date: 15/10/2024
+        </p>
+    </div>
+    
     <script type="text/javascript">
         let centerX = 144.9631; 
         let centerY = -37.8136;
