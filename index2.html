@@ -3,32 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Visualizations</title>
+    <title>Victorian Traffic Behaviour and Accessibility</title>
 
     <!-- Vega and Vega-Lite libraries -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap" rel="stylesheet"> 
+
     <style>
         body {
-            background-color: white;
-            font-family: Arial, sans-serif;
+            background-color: #c5e6f0;
+            font-family: 'Afacad Flux', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
-        }
-        .full-width-row {
-            width: 100%;
-            max-width: 1200px;
-            margin-bottom: 20px;
-        }
-        .map-container {
-            height: 800px; /* Make the map taller */
-            border: 1px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 10px;
         }
         .description-full {
             width: 100%;
@@ -38,6 +31,33 @@
             margin-bottom: 20px;
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .full-width-row {
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+        .map-container {
+            height: 700px; /* Make the map taller */
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .description-full {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background-color: white;
         }
         .row {
             display: flex;
@@ -48,17 +68,21 @@
         }
         .visualization {
             flex: 2; /* Allocates more space to the visualization */
-            min-width: 75%;
+            min-width: 78%;
             height: 500px;
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 10px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-color: white;
         }
         .description {
             flex: 1; /* Allocates less space to the text */
-            min-width: 25%;
+            min-width: 22%;
             padding: 20px;
             font-size: 1.1rem;
+            
         }
         /* Alternate rows */
         .row:nth-child(odd) .visualization {
@@ -77,7 +101,12 @@
 </head>
 <body>
 
-    <h1>Data Visualizations</h1>
+    <h1>Victorian Traffic Behaviour and Accessibility</h1>
+    <div class = "description-full">
+        <p> This is a dashboard that describes and visualises important Victorian traffic and road travel information
+            This includes a choropleth map of all rest stops in Victoria, including what services are offered. There are also plots
+            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow. </p>
+    </div>
 
     <!-- First Row (Full Width Map) -->
     <div class="full-width-row">
@@ -86,16 +115,16 @@
 
     <!-- Description for the Map -->
     <div class="description-full">
-        <p>This is a dashboard that describes and visualises important Victorian traffic and road travel information
-            This includes a choropleth map of all rest stops in Victoria, including what services are offered. There are also plots
-            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow.</p>
+        <p> This map displays all rest area locations in Victoria.
+            When hovering on a point, _________ features are detailed.
+        </p>
     </div>
 
     <!-- Second Row -->
     <div class="row">
         <div id="vis1" class="visualization"></div>
         <div class="description">
-            <p>Description of the first plot goes here. This visualization shows key insights or metrics for analysis.</p>
+            <p>We can see that on average, Hobson's Bay has the highest annual daily traffic volume (approximately 27,700 vehicles).</p>
         </div>
     </div>
 
@@ -127,8 +156,24 @@
                 "type": "interval"
                 }
             },
+            // "params": [
+            //     {
+            //         "name": "zoom_level",
+            //         "value": 30000,
+            //         "bind": {
+            //             "input": "range",
+            //             "min": 3500,
+            //             "max": 60000,
+            //             "step": 100,
+            //             "name": "Zoom: "
+            //         }
+            //     }
+            // ],
             
-            "projection": {"type": "mercator"},
+            "projection": {
+                "type": "mercator",
+                // "scale": {"expr": "zoom_level"}
+            },
             "layer": [
             {
                 "data": {
@@ -145,7 +190,7 @@
                     "type": "geoshape",
                     "stroke": "black",
                     "strokeWidth": 0.5,
-                    "fill": "#70b6db"
+                    "fill": "#b9e1ed"
                 }
             },
             {
@@ -157,7 +202,7 @@
                 
                 "mark": {
                 "type": "circle",
-                "color": "blue",
+                "color": "green",
                 "size": 50
                 },
                 "encoding": {
@@ -180,14 +225,35 @@
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "title": "Annual Traffic Volume per Local Government Area",
             "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
-            "width": 800,
+            "width": "container",
+            "height": "container",
             "data": {
             "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
             "format": {"type": "csv"}
             },
             "transform": [{
-                "filter": "datum.ALLVEHS_AADT > 5000"
+                "filter": "(datum.ALLVEHS_AADT > 5000) && (datum.LGA_SHORT_NM != 'Missing Data')",
+
             }],
+            "config": {
+                "title": {
+                    "font": "Afacad Flux",
+                    "fontSize": 18
+                },
+                "axis": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    },
+                    "legend": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    }
+                
+            },
             "mark": "bar",
             "encoding": {
             "x": {
@@ -205,7 +271,8 @@
             "color": {
                 "field": "LGA_SHORT_NM",
                 "type": "nominal",
-                "legend": null  
+                "legend": null,
+                "scale": {"scheme": "category20c"}
             },
             "tooltip": [
                 {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
@@ -220,8 +287,8 @@
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "title": "Annual Traffic Volume by Flow Direction",
             "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
-            "height": 400,
-            "width": 700,
+            "width": "container",
+            "height": "container",
             "data": {
             "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
             "format": {"type": "csv"}
@@ -234,6 +301,25 @@
             "transform": [{
                 "filter": "datum.ALLVEHS_AADT > 10000"
             }],
+            "config": {
+                "title": {
+                    "font": "Afacad Flux",
+                    "fontSize": 18
+                },
+                "axis": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    },
+                    "legend": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    }
+                
+            },
             "mark": "bar",
             "encoding": {
             "y": {
@@ -251,7 +337,13 @@
             "color": {
                 "field": "LGA_SHORT_NM",
                 "type": "nominal",
-                "legend": null  
+                "legend": {
+                    "title": "Local Government Area",
+                    "columns": 2,
+                    "labelLimit": 500,       
+                    "symbolLimit": 50  
+                },
+                "scale": {"scheme": "category20c"}
             },
             "tooltip": [
                 {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
@@ -262,7 +354,80 @@
         vegaEmbed('#vis2', spec3).catch(console.error);
 
         // Fourth Visualization
-        const spec4 = { /* Vega-Lite specification for the third plot */ };
+        const spec4 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Change in Trip Time From 2012-2019 Depending on Trip Purpose",
+            "data": {
+                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Victorian_travel_data_main.csv",
+                "format": {"type": "csv"}
+            },
+            "transform": [
+                {
+                    "filter": "datum.trippurp != 'Unknown Purpose'"
+                },
+                {
+                    "calculate": "datum.trippurp == 'Change Mode' ? 'Change Mode of Transport' : datum.trippurp",
+                    "as": "trippurp"  
+                }
+            ],
+            "config": {
+                "title": {
+                    "font": "Afacad Flux",
+                    "fontSize": 18
+                },
+                "axis": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    },
+                    "legend": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    }
+                
+            },
+            "selection": {
+                "tripPurpose": {
+                    "type" : "single",
+                    "fields": ["trippurp"],
+                    "bind": "legend",
+                    "empty": "all"
+                }
+            },
+            "width": "container",
+            "height": "container",
+            "mark": "line",
+            "encoding": {
+                "x": {
+                "field": "year",
+                "type": "temporal",
+                "timeUnit": "year",
+                "title": "Year",
+                "axis": {"format": "%Y"}
+                },
+                "y": {
+                    "aggregate": "average",
+                "field": "triptime",
+                "type": "quantitative",
+                "title": "Trip Time"
+                },
+                "color": {
+                    "field": "trippurp",
+                    "type": "nominal",
+                    "title": "Trip Purpose",
+                    "scale": {"scheme": "category20c"},
+                    "legend": {"title": "Trip Purpose"}
+                },
+                "tooltip": [
+                {"field": "year", "type": "temporal", "title": "Year"},
+                {"aggregate": "average","field": "triptime", "type": "quantitative", "title": "Trip Time"},
+                {"field": "trippurp", "type": "nominal", "title": "Trip Purpose"}
+                ]
+            }
+        };
         vegaEmbed('#vis3', spec4).catch(console.error);
     </script>
 
