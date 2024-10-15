@@ -219,8 +219,10 @@
             Name: Neil Tamhankar <br>
             Unit: FIT3179 <br>
             Date: 15/10/2024 <br>
-            Data Sources: <a href="https://discover.data.vic.gov.au/dataset/traffic-volume">Traffic Volume</a>, 
+            Data Sources: 
+            <a href="https://discover.data.vic.gov.au/dataset/rest-area">Rest Areas</a>
             <a href="https://data.gov.au/dataset/ds-dga-af33dd8c-0534-4e18-9245-fc64440f742e/details">Victorian Map</a>,
+            <a href="https://discover.data.vic.gov.au/dataset/traffic-volume">Traffic Volume</a>, 
             <a href="https://discover.data.vic.gov.au/dataset/victorian-integrated-survey-of-travel-and-activity">Victorian Travel Habits</a>
         </p>
     </div>
@@ -361,7 +363,7 @@
         // Second Visualization
         const spec2 = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "title": "Annual Traffic Volume per Local Government Area",
+            "title": "Average Daily Traffic Volume Per Local Government Area",
             "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
             "width": "container",
             "height": "container",
@@ -433,7 +435,7 @@
         // Third Visualization
         const spec3 = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "title": "Annual Traffic Volume by Flow Direction",
+            "title": "Average Daily Traffic Volume by Flow Direction",
             "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
             "width": "container",
             "height": "container",
@@ -487,7 +489,7 @@
                 "aggregate": "average",
                 "field": "ALLVEHS_AADT",
                 "type": "quantitative",
-                "title": "Average Annual Daily Traffic (ALLVEHS_AADT)"
+                "title": "Average Daily Traffic (ALLVEHS_AADT)"
             },
             "color": {
                 "field": "LGA_SHORT_NM",
