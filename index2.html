@@ -31,6 +31,7 @@
             font-size: 1.1rem;
             margin-bottom: 20px;
             border: 1px solid #ddd;
+            border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
@@ -40,7 +41,7 @@
             margin-bottom: 20px;
         }
         .map-container {
-            height: 700px; /* Make the map taller */
+            height: 700px; 
             border: 1px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 10px;
@@ -48,7 +49,7 @@
             border-radius: 15px;
             overflow: hidden;
         }
-        .description-full {
+        .map-description-full {
             width: 100%;
             max-width: 1200px;
             padding: 20px;
@@ -58,7 +59,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            background-color: white;
+            background-color: #e0ded7;
         }
         .row {
             display: flex;
@@ -68,7 +69,7 @@
             align-items: center;
         }
         .visualization {
-            flex: 2; /* Allocates more space to the visualization */
+            flex: 2; 
             min-width: 78%;
             height: 500px;
             border: 1px solid #ddd;
@@ -79,13 +80,19 @@
             background-color: white;
         }
         .description {
-            flex: 1; /* Allocates less space to the text */
+            flex: 1; 
             min-width: 22%;
             padding: 20px;
             font-size: 1.1rem;
             
         }
-        /* Alternate rows */
+        .divider {
+            border: none;
+            height: 2px;              
+            background-color: #ddd;   
+            margin: 20px 0;           
+            }
+        
         .row:nth-child(odd) .visualization {
             order: 1;
         }
@@ -106,7 +113,8 @@
     <div class = "description-full">
         <p> This is a dashboard that describes and visualises important Victorian traffic and road travel information
             This includes a choropleth map of all rest stops in Victoria, including what services are offered. There are also plots
-            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow. </p>
+            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow.
+        (Map below takes a few seconds to load, and the zoom slider is also a bit slow to respond). </p>
     </div>
 
     <!-- First Row (Full Width Map) -->
@@ -115,11 +123,15 @@
     </div>
 
     <!-- Description for the Map -->
-    <div class="description-full">
+    <div class="map-description-full">
         <p> This map displays all rest area locations in Victoria.
-            When hovering on a point, _________ features are detailed.
+            When hovering on a point, the rest area's municipality, locality, road name, type
+            (e.g. what vehicles are accepted and which services are offered), amenity description and road speed limit.
+            Travellers can easily choose where to stop depending on their needs and preferences.
         </p>
     </div>
+
+    <hr class="divider">
 
     <!-- Second Row -->
     <div class="row">
@@ -135,7 +147,10 @@
     <!-- Third Row -->
     <div class="row">
         <div class="description">
-            <p>Description of the second plot goes here. Additional data visualization to provide context and insights.</p>
+            <p> This stacked bar chart portrays the average daily traffic volume for local government areas, depending on the cardinal direction of travel.
+                It is filtered it out for volumes > 5,000. 
+            
+            We can see that areas such as Hobson's Bay have many roads that go West, South West, North and East, while other areas such as Yarra, are more exlcusive to one direction - North West, for example.</p>
         </div>
         <div id="vis2" class="visualization"></div>
     </div>
@@ -169,6 +184,23 @@
                         "step": 1000,
                         "name": "Zoom: "
                     }
+                },
+                {
+                    "name": "center",
+                    "value": [144.9, -37.8],
+                    "bind": {
+                        "input": "select",
+                        "options":[
+                            [144.9, -37.8],
+                            [144.27, -36.75],
+                            [142.2, -36.76],
+                            [147.75, -37.31]
+
+                        ],
+                        "labels": ["Melbourne CBD", "Bendigo", "Horsham", "Doctor's Flat"],
+                        "name": "Centre of Map: "
+                    }
+
                 }
             ],
             "config": {
@@ -213,7 +245,7 @@
                 "type": "mercator",
                 "scale": {"expr": "zoom_amount"},
                 "translate": [{"signal": "width / 2"}, {"signal": "height / 2"}], 
-                "center": [144.9631, -37.8136], 
+                "center": {"expr": "center"}
             },
             "layer": [
             {
@@ -251,10 +283,12 @@
                     "longitude": {"field": "geometry.coordinates[0]", "type": "quantitative"},
                     "latitude": {"field": "geometry.coordinates[1]", "type": "quantitative"},
                     "tooltip": [
+                        {"field": "properties.MUNICIPALITY", "type": "nominal", "title": "Rest Area Municipality"},
+                        {"field": "properties.LOCALITY", "type": "nominal", "title": "Rest Area Locality"},
+                        {"field": "properties.ROADNAME", "type": "nominal", "title": "Rest Area Road Name"},
                         {"field": "properties.SITEAMENITY", "type": "nominal", "title": "Rest Area Amenity Desc."},
                         {"field": "properties.RESTAREATYPE", "type": "nominal", "title": "Rest Area Type"},
                         {"field": "properties.ROADSPEEDLIMIT", "type": "nominal", "title": "Road Speed Limit"},
-                        {"field": "properties.COMMERCIALACTIVITY", "type": "nominal", "title": "Commercial Activity"}
                 ]
                 }
             }
