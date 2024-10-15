@@ -21,6 +21,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
         }
         .description-full {
@@ -124,7 +125,10 @@
     <div class="row">
         <div id="vis1" class="visualization"></div>
         <div class="description">
-            <p>We can see that on average, Hobson's Bay has the highest annual daily traffic volume (approximately 27,700 vehicles).</p>
+            <p>We can see that on average, Hobson's Bay has the highest annual daily traffic volume (27,733 vehicles),
+                while South Gippsland has the lowest (5,522 vehicles).
+
+            </p>
         </div>
     </div>
 
@@ -145,17 +149,52 @@
     </div>
 
     <script type="text/javascript">
+        let centerX = 144.9631; 
+        let centerY = -37.8136;
+
         // First Visualization (Map)
         const mapSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "title": "Rest Area Locations in Victoria",
             "width": 1200,
             "height": 600,
-            "selection": {
-                "brush": {
-                "type": "interval"
+            "params":[
+                {
+                    "name": "zoom_amount",
+                    "value": 4000,
+                    "bind": {
+                        "input": "range",
+                        "min": 3500,
+                        "max": 30000,
+                        "step": 1000,
+                        "name": "Zoom: "
+                    }
                 }
+            ],
+            "config": {
+                "title": {
+                    "font": "Afacad Flux",
+                    "fontSize": 18
+                },
+                "axis": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    },
+                    "legend": {
+                    "labelFont": "Afacad Flux",
+                    "titleFont": "Afacad Flux",
+                    "labelFontSize": 12,
+                    "titleFontSize": 14
+                    }
+                
             },
+            // "selection": {
+            //     "brush": {
+            //     "type": "interval"
+            //     }
+            // },
             // "params": [
             //     {
             //         "name": "zoom_level",
@@ -172,13 +211,15 @@
             
             "projection": {
                 "type": "mercator",
-                // "scale": {"expr": "zoom_level"}
+                "scale": {"expr": "zoom_amount"},
+                "translate": [{"signal": "width / 2"}, {"signal": "height / 2"}], 
+                "center": [144.9631, -37.8136], 
             },
             "layer": [
             {
                 "data": {
-                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders_grat.json",
-                "format": {"type": "topojson", "feature": "ne_110m_graticules_10"}
+                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders.json",
+                "format": {"type": "topojson", "feature": "vic_suburb_borders"}
                 },
                 "params": [{
                     "name": "grid",
@@ -202,14 +243,15 @@
                 
                 "mark": {
                 "type": "circle",
-                "color": "green",
-                "size": 50
+                "color": "#245406",
+                "opacity": 0.8,
+                "size": 60
                 },
                 "encoding": {
                     "longitude": {"field": "geometry.coordinates[0]", "type": "quantitative"},
                     "latitude": {"field": "geometry.coordinates[1]", "type": "quantitative"},
                     "tooltip": [
-                        {"field": "properties.RESTAREANAME", "type": "nominal", "title": "Rest Area Name"},
+                        {"field": "properties.SITEAMENITY", "type": "nominal", "title": "Rest Area Amenity Desc."},
                         {"field": "properties.RESTAREATYPE", "type": "nominal", "title": "Rest Area Type"},
                         {"field": "properties.ROADSPEEDLIMIT", "type": "nominal", "title": "Road Speed Limit"},
                         {"field": "properties.COMMERCIALACTIVITY", "type": "nominal", "title": "Commercial Activity"}
@@ -254,6 +296,12 @@
                     }
                 
             },
+            "selection": {
+                "lga_highlight":{
+                    "type": "single",
+                    "fields": ["LGA_SHORT_NM"],
+                }
+            },
             "mark": "bar",
             "encoding": {
             "x": {
@@ -266,13 +314,17 @@
                 "aggregate": "average",
                 "field": "ALLVEHS_AADT",
                 "type": "quantitative",
-                "title": "Average Annual Daily Traffic (ALLVEHS_AADT)"
+                "title": "Average Daily Traffic Volume"
             },
             "color": {
                 "field": "LGA_SHORT_NM",
                 "type": "nominal",
                 "legend": null,
                 "scale": {"scheme": "category20c"}
+            },
+            "opacity": {
+                "condition": {"selection": "lga_highlight", "value": 1},
+                "value": 0.2
             },
             "tooltip": [
                 {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
@@ -320,6 +372,13 @@
                     }
                 
             },
+            "selection": {
+                "lga_highlight":{
+                    "type": "multi",
+                    "fields": ["LGA_SHORT_NM"],
+                    "bind": "legend"
+                }
+            },
             "mark": "bar",
             "encoding": {
             "y": {
@@ -344,6 +403,10 @@
                     "symbolLimit": 50  
                 },
                 "scale": {"scheme": "category20c"}
+            },
+            "opacity": {
+                "condition": {"selection": "lga_highlight", "value": 1},
+                "value": 0.2
             },
             "tooltip": [
                 {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
@@ -399,6 +462,13 @@
             },
             "width": "container",
             "height": "container",
+            "selection": {
+                "purp_highlight":{
+                    "type": "single",
+                    "fields": ["trippurp"],
+                    "bind": "legend"
+                }
+            },
             "mark": "line",
             "encoding": {
                 "x": {
@@ -421,6 +491,10 @@
                     "scale": {"scheme": "category20c"},
                     "legend": {"title": "Trip Purpose"}
                 },
+                "opacity": {
+                "condition": {"selection": "purp_highlight", "value": 1},
+                "value": 0.2
+            },
                 "tooltip": [
                 {"field": "year", "type": "temporal", "title": "Year"},
                 {"aggregate": "average","field": "triptime", "type": "quantitative", "title": "Trip Time"},
