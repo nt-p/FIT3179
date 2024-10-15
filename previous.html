@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victorian Traffic Behaviour and Accessibility</title>
+
+    <!-- Vega and Vega-Lite libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .description {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;  /* Stack items vertically */
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .visualization {
+            width: 100%;  /* Each visualization takes the full width */
+            min-height: 300px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title Section -->
+    <div class="title">Victorian Traffic Behaviour and Accessibility</div>
+
+    <!-- Description Section -->
+    <div class="description">
+        <p>This is a dashboard that describes and visualises important Victorian traffic and road travel information
+            This includes a choropleth map of all rest stops in Victoria, including what services are offered. There are also plots
+            pertaining to annual traffic volume of vehicles per local government area (LGA), and also the direction of traffic flow.
+            </p>
+    </div>
+
+    <!-- Container for Visualizations -->
+    <div class="container">
+        <!-- First Visualization -->
+        <div id="vis1" class="visualization"></div>
+        
+        <!-- Second Visualization -->
+        <div id="vis2" class="visualization"></div>
+        
+        <!-- Third Visualization -->
+        <div id="vis3" class="visualization"></div>
+    </div>
+
+    <script type="text/javascript">
+        // Inline specification for the first visualization
+        
+        const spec1 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Rest Area Locations in Victoria",
+            "width": 1200,
+            "height": 600,
+            "selection": {
+                "brush": {
+                "type": "interval"
+                }
+            },
+            "projection": {"type": "mercator"},
+            "layer": [
+            {
+                "data": {
+                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/vic_suburb_borders.json",
+                "format": {"type": "topojson", "feature": "vic_suburb_borders"}
+                },
+                "params": [{
+                    "name": "grid",
+                    "select": "interval",
+                    "bind": "scales"
+                }],
+                
+                "mark": {
+                "type": "geoshape",
+                "stroke": "black",
+                "strokeWidth": 0.5,
+                "fill": "white"
+                }
+            },
+            {
+                "data": {
+                "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Rest_Area.json",
+                "format": {"type": "topojson", "feature": "Rest_Area"}
+                },
+                
+                
+                "mark": {
+                "type": "circle",
+                "color": "blue",
+                "size": 50
+                },
+                "encoding": {
+                    "longitude": {"field": "geometry.coordinates[0]", "type": "quantitative"},
+                    "latitude": {"field": "geometry.coordinates[1]", "type": "quantitative"},
+                    "tooltip": [
+                        {"field": "properties.RESTAREANAME", "type": "nominal", "title": "Rest Area Name"},
+                        {"field": "properties.RESTAREATYPE", "type": "nominal", "title": "Rest Area Type"},
+                        {"field": "properties.ROADSPEEDLIMIT", "type": "nominal", "title": "Road Speed Limit"},
+                        {"field": "properties.COMMERCIALACTIVITY", "type": "nominal", "title": "Commercial Activity"}
+                ]
+                }
+            }
+            ]
+        };
+
+    </script>
+  
+    <script type="text/javascript">
+
+        // Inline specification for the second visualization
+        const spec2 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Annual Traffic Volume per Local Government Area",
+            "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
+            "width": 1000,
+            "data": {
+            "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
+            "format": {"type": "csv"}
+            },
+            "mark": "bar",
+            "encoding": {
+            "x": {
+                "field": "LGA_SHORT_NM",
+                "type": "nominal",
+                "title": "Local Government Area",
+                "sort": "-y"  
+            },
+            "y": {
+                "aggregate": "average",
+                "field": "ALLVEHS_AADT",
+                "type": "quantitative",
+                "title": "Average Annual Daily Traffic (ALLVEHS_AADT)"
+            },
+            "color": {
+                "field": "LGA_SHORT_NM",
+                "type": "nominal",
+                "legend": null  
+            },
+            "tooltip": [
+                {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
+                {"aggregate": "average", "field": "ALLVEHS_AADT", "type": "quantitative", "title": "AADT"}
+            ]
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        // Inline specification for the third visualization
+        const spec3 = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Annual Traffic Volume by Flow Direction",
+            "description": "A bar chart showing ALLVEHS_AADT by LGA_SHORT_NM.",
+            "width": 1200,
+            "data": {
+            "url": "https://raw.githubusercontent.com/nt-p/FIT3179/main/Data/Traffic_Volume.csv",
+            "format": {"type": "csv"}
+            },
+            "mark": "point",
+            "encoding": {
+            "x": {
+                "field": "FLOW",
+                "type": "nominal",
+                "title": "Flow Direction",
+                "sort": "-y"  
+            },
+            "y": {
+                "field": "ALLVEHS_AADT",
+                "type": "quantitative",
+                "title": "Average Annual Daily Traffic (ALLVEHS_AADT)"
+            },
+            "color": {
+                "field": "LGA_SHORT_NM",
+                "type": "nominal",
+                "legend": null  
+            },
+            "tooltip": [
+                {"field": "LGA_SHORT_NM", "type": "nominal", "title": "LGA"},
+                {"field": "ALLVEHS_AADT", "type": "quantitative", "title": "AADT"}
+            ]
+            }
+        }
+
+        // Embed the visualizations using inline specs
+        vegaEmbed('#vis1', spec1).catch(console.error);
+        vegaEmbed('#vis2', spec2).catch(console.error);
+        vegaEmbed('#vis3', spec3).catch(console.error);
+    </script>
+
+</body>
+</html>
